@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "shell actions designed as promises",
   "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "test": "(npmts)"
   },
