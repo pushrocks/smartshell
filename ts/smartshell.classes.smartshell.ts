@@ -10,20 +10,47 @@ export interface ISmartshellContructorOptions {
 }
 
 export class Smartshell {
-  sourceFiles: string[] = []
+  executor: TExecutor
+  sourceFileArray: string[] = []
   constructor (optionsArg: ISmartshellContructorOptions) {
+    this.executor = optionsArg.executor
     for (let sourceFilePath of optionsArg.sourceFilePaths) {
-      this.sourceFiles.push(sourceFilePath)
+      this.sourceFileArray.push(sourceFilePath)
     }
   }
 
   addSourceFiles(sourceFilePathsArray: string[]) {
     for(let sourceFilePath of sourceFilePathsArray) {
-      this.sourceFiles.push(sourceFilePath)
+      this.sourceFileArray.push(sourceFilePath)
     }
   }
 
   cleanSourceFiles () {
-    this.sourceFiles = []
+    this.sourceFileArray = []
+  }
+
+  /**
+   * executes silently and returns IExecResult
+   * @param commandArg 
+   */
+  execSilent(commandArg: string) {
+    let execCommand = this.createExecString(commandArg)
+    return smartshellWrap.execSilent(commandArg)
+  }
+
+  /**
+   * creates the final sourcing string
+   * @param commandArg
+   */
+  private createExecString (commandArg): string {
+    if (this.executor === 'bash') {
+      let sourceString = ''
+      for (let sourceFilePath of this.sourceFileArray) {
+        sourceString = sourceString + `source ${sourceFilePath} && `
+      }
+      return `bash -c '${sourceString} ${commandArg}'`
+    } else {
+      return commandArg
+    }
   }
 }
