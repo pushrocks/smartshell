@@ -5,7 +5,7 @@ cache:
   paths:
   - .yarn/
   key: "$CI_BUILD_STAGE"
-  untracked: true
+  untracked: false
 
 stages:
 - test
