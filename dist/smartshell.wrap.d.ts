@@ -1,9 +1,15 @@
 /// <reference types="node" />
 import { ChildProcess } from 'child_process';
+/**
+ * interface for ExecResult
+ */
 export interface IExecResult {
     exitCode: number;
     stdout: string;
 }
+/**
+ * interface for streaming ExecResult
+ */
 export interface IExecResultStreaming {
     childProcess: ChildProcess;
     finalPromise: Promise<IExecResult>;
@@ -25,3 +31,7 @@ export declare let execStreaming: (commandStringArg: string) => {
     childProcess: ChildProcess;
     finalPromise: Promise<IExecResult>;
 };
+/**
+ * get a path
+ */
+export declare let which: (cmd: string) => Promise<string>;

@@ -1,3 +1,4 @@
 import * as shelljs from 'shelljs';
 import * as smartq from 'smartq';
-export { shelljs, smartq };
+import * as which from 'which';
+export { shelljs, smartq, which };

@@ -4,11 +4,17 @@ import * as plugins from './smartshell.plugins'
 import { ChildProcess } from 'child_process'
 import { Deferred } from 'smartq'
 
+/**
+ * interface for ExecResult
+ */
 export interface IExecResult {
   exitCode: number,
   stdout: string
 }
 
+/**
+ * interface for streaming ExecResult
+ */
 export interface IExecResultStreaming {
   childProcess: ChildProcess,
   finalPromise: Promise<IExecResult>
@@ -59,4 +65,18 @@ export let execStreaming = (commandStringArg: string) => {
     childProcess: execChildProcess,
     finalPromise: childProcessEnded.promise
   }
+}
+
+/**
+ * get a path
+ */
+export let which = (cmd: string): Promise<string> => {
+  let done = plugins.smartq.defer()
+  plugins.which(cmd, (err, path: string) => {
+    if (err) {
+      done.reject(err)
+    }
+    done.resolve(path)
+  })
+  return done.promise
 }
