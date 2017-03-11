@@ -39,6 +39,15 @@ export class Smartshell {
   }
 
   /**
+   * executes and returns IExecResult
+   * @param commandArg
+   */
+  async exec (commandArg: string) {
+    let execCommand = this.createExecString(commandArg)
+    return await smartshellWrap.exec(commandArg)
+  }
+
+  /**
    * creates the final sourcing string
    * @param commandArg
    */

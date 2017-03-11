@@ -16,6 +16,11 @@ export declare class Smartshell {
      */
     execSilent(commandArg: string): Promise<smartshellWrap.IExecResult>;
     /**
+     * executes and returns IExecResult
+     * @param commandArg
+     */
+    exec(commandArg: string): Promise<smartshellWrap.IExecResult>;
+    /**
      * creates the final sourcing string
      * @param commandArg
      */
