@@ -31,4 +31,10 @@ describe('smartshell', function () {
     })
     expect(testSmartshell).to.be.instanceof(smartshell.Smartshell)
   })
+
+  it('should run async', function () {
+    return testSmartshell.execSilent('sleep 1 && npm -v').then(async (execResult) => {
+      console.log(execResult.stdout)
+    })
+  })
 })

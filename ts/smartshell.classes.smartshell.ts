@@ -31,11 +31,11 @@ export class Smartshell {
 
   /**
    * executes silently and returns IExecResult
-   * @param commandArg 
+   * @param commandArg
    */
-  execSilent(commandArg: string) {
+  async execSilent (commandArg: string) {
     let execCommand = this.createExecString(commandArg)
-    return smartshellWrap.execSilent(commandArg)
+    return await smartshellWrap.execSilent(commandArg)
   }
 
   /**
