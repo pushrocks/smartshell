@@ -35,7 +35,7 @@ export class Smartshell {
    */
   async execSilent (commandArg: string) {
     let execCommand = this.createExecString(commandArg)
-    return await smartshellWrap.execSilent(commandArg)
+    return await smartshellWrap.execSilent(execCommand)
   }
 
   /**
@@ -44,7 +44,7 @@ export class Smartshell {
    */
   async exec (commandArg: string) {
     let execCommand = this.createExecString(commandArg)
-    return await smartshellWrap.exec(commandArg)
+    return await smartshellWrap.exec(execCommand)
   }
 
   /**
