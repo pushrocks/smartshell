@@ -32,6 +32,12 @@ export declare let execStreaming: (commandStringArg: string) => {
     finalPromise: Promise<IExecResult>;
 };
 /**
+ * executes a command and returns promise that will be fullfilled once an putput line matches RegexArg
+ * @param commandStringArg
+ * @param regexArg
+ */
+export declare let execAndWaitForLine: (commandStringArg: string, regexArg: RegExp) => Promise<{}>;
+/**
  * get a path
  */
 export declare let which: (cmd: string) => Promise<string>;
