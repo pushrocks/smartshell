@@ -70,12 +70,12 @@ export let execStreaming = (commandStringArg: string) => {
 /**
  * executes a command and returns promise that will be fullfilled once an putput line matches RegexArg
  * @param commandStringArg
- * @param regexArg 
+ * @param regexArg
  */
 export let execAndWaitForLine = (commandStringArg: string, regexArg: RegExp) => {
   let done = plugins.smartq.defer()
   let execStreamingResult = execStreaming(commandStringArg)
-  execStreamingResult.childProcess.on('data', (stdOutChunk: string) => {
+  execStreamingResult.childProcess.stdout.on('data', (stdOutChunk: string) => {
     if (regexArg.test(stdOutChunk)) {
       done.resolve()
     }

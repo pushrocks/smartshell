@@ -1,28 +1,37 @@
 import { expect, tap } from 'tapbundle'
 
 import * as smartshell from '../dist/index'
+import * as smartq from 'smartq'
 
 let testSmartshell: smartshell.Smartshell
 
-
 tap.test('smartshell should run async', async () => {
-  this.timeout(1000000)
-  return smartshell.exec('npm -v').then((execResult) => {
-    expect(execResult.stdout).to.match(/[0-9\.]*/)
-  })
+  let execResult = await smartshell.exec('npm -v')
+  expect(execResult.stdout).to.match(/[0-9\.]*/)
 })
+
 tap.test('smartshell should run async and silent', async () => {
-  return smartshell.execSilent('npm -v').then((execResult) => {
-    expect(execResult.stdout).to.match(/[0-9\.]*/)
-  })
+  let execResult = await smartshell.execSilent('npm -v')
+  expect(execResult.stdout).to.match(/[0-9\.]*/)
 })
+
 tap.test('smartshell should stream a shell execution', async () => {
+  let done = smartq.defer()
   let execStreamingResponse = smartshell.execStreaming('npm -v')
-  execStreamingResponse.childProcess.stdout.on('data', (data) => {
-    console.log('Received ' + data)
+  execStreamingResponse.childProcess.stdout.on('data', data => {
+    done.resolve(data)
   })
-  return execStreamingResponse.finalPromise
+  let data = await done.promise
+  expect(data).to.equal('5.0.3\n')
+  await execStreamingResponse.finalPromise
 })
+
+tap.test('it should execute and wait for a line in the output', async () => {
+  await smartshell.execAndWaitForLine('npm -v', /5.0.3/)
+})
+
+// Smartshell class
+
 tap.test('smartshell should create a Smartshell instance', async () => {
   testSmartshell = new smartshell.Smartshell({
     executor: 'bash',
