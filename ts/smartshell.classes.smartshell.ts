@@ -19,8 +19,8 @@ export class Smartshell {
     }
   }
 
-  addSourceFiles(sourceFilePathsArray: string[]) {
-    for(let sourceFilePath of sourceFilePathsArray) {
+  addSourceFiles (sourceFilePathsArray: string[]) {
+    for (let sourceFilePath of sourceFilePathsArray) {
       this.sourceFileArray.push(sourceFilePath)
     }
   }
