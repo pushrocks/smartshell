@@ -27,7 +27,11 @@ export declare let execSilent: (commandStringArg: string) => Promise<IExecResult
 /**
  * executes a command and allws you to stream output
  */
-export declare let execStreaming: (commandStringArg: string) => {
+export declare let execStreaming: (commandStringArg: string, silentArg?: boolean) => {
+    childProcess: ChildProcess;
+    finalPromise: Promise<IExecResult>;
+};
+export declare let execStreamingSilent: (commandStringArg: string) => {
     childProcess: ChildProcess;
     finalPromise: Promise<IExecResult>;
 };
@@ -36,7 +40,8 @@ export declare let execStreaming: (commandStringArg: string) => {
  * @param commandStringArg
  * @param regexArg
  */
-export declare let execAndWaitForLine: (commandStringArg: string, regexArg: RegExp) => Promise<{}>;
+export declare let execAndWaitForLine: (commandStringArg: string, regexArg: RegExp, silentArg?: boolean) => Promise<{}>;
+export declare let execAndWaitForLineSilent: (commandStringArg: string, regexArg: RegExp) => void;
 /**
  * get a path
  */

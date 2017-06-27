@@ -53,9 +53,9 @@ export let execSilent = (commandStringArg: string) => {
 /**
  * executes a command and allws you to stream output
  */
-export let execStreaming = (commandStringArg: string) => {
+export let execStreaming = (commandStringArg: string, silentArg: boolean = false) => {
   let childProcessEnded = plugins.smartq.defer<IExecResult>()
-  let execChildProcess = plugins.shelljs.exec(commandStringArg, {async: true, silent: true}, (code, stdout, stderr) => {
+  let execChildProcess = plugins.shelljs.exec(commandStringArg, {async: true, silent: silentArg}, (code, stdout, stderr) => {
     childProcessEnded.resolve({
       exitCode: code,
       stdout: stdout
@@ -67,20 +67,28 @@ export let execStreaming = (commandStringArg: string) => {
   }
 }
 
+export let execStreamingSilent = (commandStringArg: string) => {
+  return execStreaming(commandStringArg, true)
+}
+
 /**
  * executes a command and returns promise that will be fullfilled once an putput line matches RegexArg
  * @param commandStringArg
  * @param regexArg
  */
-export let execAndWaitForLine = (commandStringArg: string, regexArg: RegExp) => {
+export let execAndWaitForLine = (commandStringArg: string, regexArg: RegExp, silentArg: boolean = false) => {
   let done = plugins.smartq.defer()
-  let execStreamingResult = execStreaming(commandStringArg)
+  let execStreamingResult = execStreaming(commandStringArg, silentArg)
   execStreamingResult.childProcess.stdout.on('data', (stdOutChunk: string) => {
     if (regexArg.test(stdOutChunk)) {
       done.resolve()
     }
   })
   return done.promise
+}
+
+export let execAndWaitForLineSilent = (commandStringArg: string, regexArg: RegExp) => {
+  execAndWaitForLine(commandStringArg, regexArg, true)
 }
 
 /**
