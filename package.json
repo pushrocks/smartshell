@@ -1,6 +1,6 @@
 {
   "name": "smartshell",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "shell actions designed as promises",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
