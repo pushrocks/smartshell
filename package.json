@@ -22,13 +22,13 @@
   },
   "homepage": "https://gitlab.com/pushrocks/smartshell#README",
   "devDependencies": {
-    "tapbundle": "^1.0.14"
+    "tapbundle": "^1.1.1"
   },
   "dependencies": {
     "@types/shelljs": "^0.7.2",
     "@types/which": "^1.0.28",
     "shelljs": "^0.7.8",
-    "smartq": "^1.1.1",
+    "smartq": "^1.1.6",
     "typings-global": "^1.0.19",
     "which": "^1.2.14"
   }

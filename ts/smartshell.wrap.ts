@@ -95,7 +95,7 @@ export let execAndWaitForLineSilent = (commandStringArg: string, regexArg: RegEx
  * get a path
  */
 export let which = (cmd: string): Promise<string> => {
-  let done = plugins.smartq.defer()
+  let done = plugins.smartq.defer<string>()
   plugins.which(cmd, (err, path: string) => {
     if (err) {
       done.reject(err)
