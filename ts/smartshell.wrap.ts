@@ -21,12 +21,31 @@ export interface IExecResultStreaming {
 }
 
 /**
+ * import path
+ */
+let importPath = (stringArg): string => {
+  if (process.env.SMARTSHELL_PATH) {
+    let commandResult = `PATH=${process.env.SMARTSHELL_PATH} && ${stringArg}`
+    // console.log(commandResult)
+    return commandResult
+  } else {
+    return stringArg
+  }
+}
+
+/**
  * executes a given command async
  * @param commandStringArg
  */
 export let exec = (commandStringArg: string): Promise<IExecResult> => {
   let done = plugins.smartq.defer<IExecResult>()
-  plugins.shelljs.exec(commandStringArg, { async: true }, (code, stdout, stderr) => {
+  plugins.shelljs.exec(importPath(commandStringArg), { async: true }, (code, stdout, stderr) => {
+    if (stderr) {
+      console.log('StdErr found:')
+      console.log(stderr)
+      done.reject(stderr)
+      return
+    }
     done.resolve({
       exitCode: code,
       stdout: stdout
@@ -41,7 +60,13 @@ export let exec = (commandStringArg: string): Promise<IExecResult> => {
  */
 export let execSilent = (commandStringArg: string) => {
   let done = plugins.smartq.defer<IExecResult>()
-  plugins.shelljs.exec(commandStringArg, { async: true, silent: true }, (code, stdout, stderr) => {
+  plugins.shelljs.exec(importPath(commandStringArg), { async: true, silent: true }, (code, stdout, stderr) => {
+    if (stderr && stderr !== '') {
+      console.log('StdErr found:')
+      console.log(stderr)
+      done.reject(stderr)
+      return
+    }
     done.resolve({
       exitCode: code,
       stdout: stdout
@@ -55,7 +80,7 @@ export let execSilent = (commandStringArg: string) => {
  */
 export let execStreaming = (commandStringArg: string, silentArg: boolean = false) => {
   let childProcessEnded = plugins.smartq.defer<IExecResult>()
-  let execChildProcess = plugins.shelljs.exec(commandStringArg, {async: true, silent: silentArg}, (code, stdout, stderr) => {
+  let execChildProcess = plugins.shelljs.exec(importPath(commandStringArg), {async: true, silent: silentArg}, (code, stdout, stderr) => {
     childProcessEnded.resolve({
       exitCode: code,
       stdout: stdout
