@@ -22,12 +22,12 @@ tap.test('smartshell should stream a shell execution', async () => {
     done.resolve(data)
   })
   let data = await done.promise
-  expect(data).to.equal('5.0.4\n')
+  expect(data).to.match(/[0-9\.]*/)
   await execStreamingResponse.finalPromise
 })
 
 tap.test('it should execute and wait for a line in the output', async () => {
-  await smartshell.execAndWaitForLine('npm -v', /5.0.4/)
+  await smartshell.execAndWaitForLine('echo "5.0.4"', /5.0.4/)
 })
 
 // Smartshell class
