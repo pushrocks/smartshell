@@ -18,12 +18,16 @@ export interface IExecResultStreaming {
  * executes a given command async
  * @param commandStringArg
  */
-export declare let exec: (commandStringArg: string) => Promise<IExecResult>;
+export declare let exec: (commandStringArg: string, silentArg?: boolean, strictArg?: boolean) => Promise<IExecResult>;
 /**
  * executes a given command async and silent
  * @param commandStringArg
  */
 export declare let execSilent: (commandStringArg: string) => Promise<IExecResult>;
+/**
+ * executes strict, meaning it rejects the promise if something happens
+ */
+export declare let execStrict: (commandStringArg: string) => Promise<IExecResult>;
 /**
  * executes a command and allws you to stream output
  */

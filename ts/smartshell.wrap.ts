@@ -37,13 +37,15 @@ let importPath = (stringArg): string => {
  * executes a given command async
  * @param commandStringArg
  */
-export let exec = (commandStringArg: string): Promise<IExecResult> => {
+export let exec = (commandStringArg: string, silentArg: boolean = false, strictArg = false): Promise<IExecResult> => {
   let done = plugins.smartq.defer<IExecResult>()
-  plugins.shelljs.exec(importPath(commandStringArg), { async: true }, (code, stdout, stderr) => {
-    if (stderr) {
+  plugins.shelljs.exec(importPath(commandStringArg), { async: true, silent: silentArg }, (code, stdout, stderr) => {
+    if (stderr && (stderr !== '') && (!silentArg || strictArg)) {
       console.log('StdErr found:')
       console.log(stderr)
-      done.reject(stderr)
+    }
+    if (strictArg) {
+      done.reject(new Error(stderr))
       return
     }
     done.resolve({
@@ -58,21 +60,15 @@ export let exec = (commandStringArg: string): Promise<IExecResult> => {
  * executes a given command async and silent
  * @param commandStringArg
  */
-export let execSilent = (commandStringArg: string) => {
-  let done = plugins.smartq.defer<IExecResult>()
-  plugins.shelljs.exec(importPath(commandStringArg), { async: true, silent: true }, (code, stdout, stderr) => {
-    if (stderr && stderr !== '') {
-      console.log('StdErr found:')
-      console.log(stderr)
-      done.reject(stderr)
-      return
-    }
-    done.resolve({
-      exitCode: code,
-      stdout: stdout
-    })
-  })
-  return done.promise
+export let execSilent = async (commandStringArg: string): Promise<IExecResult> => {
+  return await exec(commandStringArg, true)
+}
+
+/**
+ * executes strict, meaning it rejects the promise if something happens
+ */
+export let execStrict = async (commandStringArg: string): Promise<IExecResult> => {
+  return await exec(commandStringArg, true, true)
 }
 
 /**
