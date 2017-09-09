@@ -1,6 +1,6 @@
 import { expect, tap } from 'tapbundle'
 
-import * as smartshell from '../dist/index'
+import * as smartshell from '../ts/index'
 import * as smartq from 'smartq'
 
 let testSmartshell: smartshell.Smartshell

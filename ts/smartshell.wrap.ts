@@ -40,8 +40,13 @@ let importPath = (stringArg): string => {
 export let exec = (commandStringArg: string, silentArg: boolean = false, strictArg = false): Promise<IExecResult> => {
   let done = plugins.smartq.defer<IExecResult>()
   plugins.shelljs.exec(importPath(commandStringArg), { async: true, silent: silentArg }, (code, stdout, stderr) => {
-    if (stderr && (stderr !== '') && (!silentArg || strictArg)) {
-      console.log('StdErr found:')
+    if (
+      stderr
+      && (stderr !== '')
+      && (!silentArg || strictArg)
+      && (process.env.DEBUG === 'true')
+    ) {
+      console.log('StdErr found.')
       console.log(stderr)
     }
     if (strictArg) {
