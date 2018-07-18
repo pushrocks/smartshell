@@ -1,9 +1,4 @@
-import * as shelljs from 'shelljs'
-import * as smartq from 'smartq'
-import * as which from 'which'
+import * as smartpromise from '@pushrocks/smartpromise';
+import * as which from 'which';
 
-export {
-  shelljs,
-  smartq,
-  which
-}
+export { smartpromise, which };
