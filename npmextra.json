@@ -3,6 +3,7 @@
     "npmGlobalTools": [
       "npmts",
       "ts-node"
-    ]
+    ],
+    "npmAccessLevel": "public"
   }
 }
