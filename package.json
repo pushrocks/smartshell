@@ -1,7 +1,7 @@
 {
   "name": "@pushrocks/smartshell",
   "private": false,
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "shell actions designed as promises",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
