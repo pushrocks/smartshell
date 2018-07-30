@@ -46,7 +46,7 @@ tap.test('smartshell should run async', async () => {
 
 tap.test('should be able to find git', async () => {
   testSmartshell.exec('git --version');
-})
+});
 
 tap.start({
   throwOnError: true

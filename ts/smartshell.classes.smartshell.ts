@@ -1,11 +1,10 @@
 // -- imports --
 import * as plugins from './smartshell.plugins';
-import * as smartshellWrap from './smartshell.wrap';
-import { ShellEnv, IShellEnvContructorOptions, TExecutor, } from './smartshell.classes.shellenv';
+import { ShellEnv, IShellEnvContructorOptions, TExecutor } from './smartshell.classes.shellenv';
 import { ShellLog } from './smartshell.classes.shelllog';
 
-import * as cp from "child_process";
-import { Deferred } from "@pushrocks/smartpromise";
+import * as cp from 'child_process';
+import { Deferred } from '@pushrocks/smartpromise';
 
 // -- interfaces --
 /**
@@ -35,7 +34,7 @@ export class Smartshell {
   /**
    * imports path into the shell from env if available and returns it with
    */
-  private _importEnvVarPath (stringArg): string {
+  private _importEnvVarPath(stringArg): string {
     if (process.env.SMARTSHELL_PATH) {
       let commandResult = `PATH=${process.env.SMARTSHELL_PATH} && ${stringArg}`;
       // console.log(commandResult)
@@ -43,13 +42,13 @@ export class Smartshell {
     } else {
       return stringArg;
     }
-  };
+  }
 
   /**
    * executes a given command async
    * @param commandStringArg
    */
-  private async _exec (
+  private async _exec(
     commandStringArg: string,
     silentArg: boolean = false,
     strictArg = false,
@@ -59,7 +58,7 @@ export class Smartshell {
     const done = plugins.smartpromise.defer<IExecResult | IExecResultStreaming>();
     const childProcessEnded = plugins.smartpromise.defer<IExecResult>();
     // build commandToExecute
-    let commandToExecute = commandStringArg
+    let commandToExecute = commandStringArg;
     commandToExecute = this.shellEnv.createEnvExecString(commandStringArg);
     commandToExecute = this._importEnvVarPath(commandToExecute);
     const spawnlogInstance = new ShellLog();
@@ -68,37 +67,37 @@ export class Smartshell {
       env: process.env
     });
 
-    execChildProcess.stdout.on("data", data => {
+    execChildProcess.stdout.on('data', data => {
       if (!silentArg) {
         spawnlogInstance.logToConsole(data);
       }
       spawnlogInstance.addToBuffer(data);
     });
-    execChildProcess.stderr.on("data", data => {
+    execChildProcess.stderr.on('data', data => {
       if (!silentArg) {
         spawnlogInstance.logToConsole(data);
       }
       spawnlogInstance.addToBuffer(data);
     });
 
-    if(streamingArg) {
+    if (streamingArg) {
       done.resolve({
         childProcess: execChildProcess,
         finalPromise: childProcessEnded.promise
       });
     }
 
-    execChildProcess.on("exit", (code, signal) => {
-      if(strictArg && code === 1) {
+    execChildProcess.on('exit', (code, signal) => {
+      if (strictArg && code === 1) {
         done.reject();
       }
 
       const execResult = {
         exitCode: code,
         stdout: spawnlogInstance.logStore.toString()
-      }
+      };
 
-      if(!streamingArg) {
+      if (!streamingArg) {
         done.resolve(execResult);
       }
       childProcessEnded.resolve(execResult);
@@ -106,72 +105,58 @@ export class Smartshell {
 
     const result = await done.promise;
     return result;
-  };
+  }
 
-  async exec (
-    commandStringArg: string
-  ): Promise<IExecResult> {
+  async exec(commandStringArg: string): Promise<IExecResult> {
     return (await this._exec(commandStringArg, false)) as IExecResult;
-  };
-  
+  }
+
   /**
    * executes a given command async and silent
    * @param commandStringArg
    */
-  async execSilent (
-    commandStringArg: string
-  ): Promise<IExecResult> {
+  async execSilent(commandStringArg: string): Promise<IExecResult> {
     return (await this._exec(commandStringArg, true)) as IExecResult;
-  };
+  }
 
   /**
    * executes a command async and strict, meaning it rejects the promise if something happens
    */
-  async execStrict (
-    commandStringArg: string
-  ): Promise<IExecResult> {
-    return (await this._exec(commandStringArg, true, true))  as IExecResult;
-  };
+  async execStrict(commandStringArg: string): Promise<IExecResult> {
+    return (await this._exec(commandStringArg, true, true)) as IExecResult;
+  }
 
   /**
    * executes a command and allows you to stream output
    */
-  async execStreaming (
+  async execStreaming(
     commandStringArg: string,
     silentArg: boolean = false
   ): Promise<IExecResultStreaming> {
     return (await this._exec(commandStringArg, silentArg, false, true)) as IExecResultStreaming;
-  };
+  }
 
-  async execStreamingSilent (commandStringArg: string) {
+  async execStreamingSilent(commandStringArg: string) {
     return (await this.execStreaming(commandStringArg, true)) as IExecResultStreaming;
-  };
+  }
 
   /**
    * executes a command and returns promise that will be fullfilled once an putput line matches RegexArg
    * @param commandStringArg
    * @param regexArg
    */
-  async execAndWaitForLine (
-    commandStringArg: string,
-    regexArg: RegExp,
-    silentArg: boolean = false
-  ) {
+  async execAndWaitForLine(commandStringArg: string, regexArg: RegExp, silentArg: boolean = false) {
     let done = plugins.smartpromise.defer();
     let execStreamingResult = await this.execStreaming(commandStringArg, silentArg);
-    execStreamingResult.childProcess.stdout.on("data", (stdOutChunk: string) => {
+    execStreamingResult.childProcess.stdout.on('data', (stdOutChunk: string) => {
       if (regexArg.test(stdOutChunk)) {
         done.resolve();
       }
     });
     return done.promise;
-  };
+  }
 
-  async execAndWaitForLineSilent (
-    commandStringArg: string,
-    regexArg: RegExp
-  ) {
+  async execAndWaitForLineSilent(commandStringArg: string, regexArg: RegExp) {
     this.execAndWaitForLine(commandStringArg, regexArg, true);
-  };
-  
+  }
 }

@@ -9,7 +9,7 @@ export class ShellLog {
 
   /**
    * log data to console
-   * @param dataArg 
+   * @param dataArg
    */
   logToConsole(dataArg: string | Buffer): void {
     // make sure we have the data as string
@@ -34,7 +34,7 @@ export class ShellLog {
       }
       return dataArg;
     })();
-    this.logStore = Buffer.concat([this.logStore,dataBuffer]);
+    this.logStore = Buffer.concat([this.logStore, dataBuffer]);
   }
 
   logAndAdd(dataArg: string | Buffer): void {

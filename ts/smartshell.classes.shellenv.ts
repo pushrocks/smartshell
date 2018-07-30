@@ -8,7 +8,7 @@ export interface IShellEnvContructorOptions {
 export class ShellEnv {
   executor: TExecutor;
   sourceFileArray: string[] = [];
-  
+
   /**
    * constructor for the shellenv
    */
@@ -17,11 +17,11 @@ export class ShellEnv {
     for (let sourceFilePath of optionsArg.sourceFilePaths) {
       this.sourceFileArray.push(sourceFilePath);
     }
-  };
+  }
 
   /**
    * add files that are going to be sourced when running a command
-   * @param sourceFilePathsArray 
+   * @param sourceFilePathsArray
    */
   addSourceFiles(sourceFilePathsArray: string[]) {
     for (let sourceFilePath of sourceFilePathsArray) {
