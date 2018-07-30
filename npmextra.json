@@ -1,9 +1,6 @@
 {
   "npmci": {
-    "npmGlobalTools": [
-      "npmts",
-      "ts-node"
-    ],
+    "npmGlobalTools": [],
     "npmAccessLevel": "public"
   }
 }

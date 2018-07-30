@@ -7,7 +7,7 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "test": "(tsrun test/test.ts)",
-    "build": "(npmts)"
+    "build": "(tsbuild)"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   },
   "homepage": "https://gitlab.com/pushrocks/smartshell#README",
   "devDependencies": {
+    "@gitzone/tsbuild": "^2.0.21",
     "@gitzone/tsrun": "^1.1.9",
     "@pushrocks/tapbundle": "^3.0.1",
     "@types/node": "^10.5.2"
