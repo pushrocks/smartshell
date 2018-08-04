@@ -1,22 +1,48 @@
-export type TExecutor = 'sh' | 'bash';
+export type TExecutor = "sh" | "bash";
 
 export interface IShellEnvContructorOptions {
   executor: TExecutor;
-  sourceFilePaths: string[];
+  sourceFilePaths?: string[];
+  pathDirectories?: string[];
 }
 
 export class ShellEnv {
   executor: TExecutor;
   sourceFileArray: string[] = [];
+  pathDirArray: string[] = [];
 
   /**
    * constructor for the shellenv
    */
   constructor(optionsArg: IShellEnvContructorOptions) {
     this.executor = optionsArg.executor;
-    for (let sourceFilePath of optionsArg.sourceFilePaths) {
-      this.sourceFileArray.push(sourceFilePath);
+
+    // add sourcefiles
+    if (optionsArg.sourceFilePaths) {
+      this.sourceFileArray = this.sourceFileArray.concat(
+        optionsArg.sourceFilePaths
+      );
     }
+
+    // add pathDirectories
+    if (optionsArg.pathDirectories) {
+      this.pathDirArray = this.pathDirArray.concat(optionsArg.pathDirectories);
+    }
+  }
+
+  /**
+   * imports path into the shell from env if available and returns it with
+   */
+  private _setPath(commandStringArg): string {
+    let commandResult = commandStringArg;
+    let commandPath = process.env.PATH;
+    if (process.env.SMARTSHELL_PATH) {
+      commandPath = `${commandPath}:${process.env.SMARTSHELL_PATH}`;
+    }
+    commandResult = `PATH=${
+      commandPath
+    } && ${commandStringArg}`;
+    return commandResult;
   }
 
   /**
@@ -37,14 +63,15 @@ export class ShellEnv {
   }
 
   createEnvExecString(commandArg): string {
-    if (this.executor === 'bash') {
-      let sourceString = '';
+    let commandResult = ''
+    if (this.executor === "bash") {
+      let sourceString = "";
       for (let sourceFilePath of this.sourceFileArray) {
         sourceString = sourceString + `source ${sourceFilePath} && `;
       }
-      return `bash -c '${sourceString} ${commandArg}'`;
-    } else {
-      return commandArg;
+      commandResult = `bash -c '${sourceString} ${commandArg}'`;
     }
+    commandResult = this._setPath(commandResult);
+    return commandResult;
   }
 }

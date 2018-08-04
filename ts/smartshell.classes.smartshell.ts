@@ -29,20 +29,7 @@ export class Smartshell {
 
   constructor(optionsArg: IShellEnvContructorOptions) {
     this.shellEnv = new ShellEnv(optionsArg);
-  }
-
-  /**
-   * imports path into the shell from env if available and returns it with
-   */
-  private _importEnvVarPath(stringArg): string {
-    if (process.env.SMARTSHELL_PATH) {
-      let commandResult = `PATH=${process.env.SMARTSHELL_PATH} && ${stringArg}`;
-      // console.log(commandResult)
-      return commandResult;
-    } else {
-      return stringArg;
-    }
-  }
+  };
 
   /**
    * executes a given command async
@@ -60,7 +47,6 @@ export class Smartshell {
     // build commandToExecute
     let commandToExecute = commandStringArg;
     commandToExecute = this.shellEnv.createEnvExecString(commandStringArg);
-    commandToExecute = this._importEnvVarPath(commandToExecute);
     const spawnlogInstance = new ShellLog();
     const execChildProcess = cp.spawn(commandToExecute, [], {
       shell: true,
