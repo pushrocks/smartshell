@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "test": "(tsrun test/test.ts)",
+    "test": "(tstest test/)",
     "build": "(tsbuild)"
   },
   "repository": {
@@ -26,8 +26,9 @@
   "devDependencies": {
     "@gitzone/tsbuild": "^2.0.21",
     "@gitzone/tsrun": "^1.1.9",
+    "@gitzone/tstest": "^1.0.12",
     "@pushrocks/tapbundle": "^3.0.1",
-    "@types/node": "^10.5.2"
+    "@types/node": "^10.5.6"
   },
   "dependencies": {
     "@pushrocks/smartpromise": "^2.0.5",
