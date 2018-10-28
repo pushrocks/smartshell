@@ -50,7 +50,8 @@ export class Smartshell {
     const spawnlogInstance = new ShellLog();
     const execChildProcess = cp.spawn(commandToExecute, [], {
       shell: true,
-      env: process.env
+      env: process.env,
+      detached: true
     });
 
     execChildProcess.stdout.on('data', data => {
