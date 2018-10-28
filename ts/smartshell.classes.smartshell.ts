@@ -21,6 +21,7 @@ export interface IExecResult {
 export interface IExecResultStreaming {
   childProcess: cp.ChildProcess;
   finalPromise: Promise<IExecResult>;
+  kill: () => void;
 }
 
 // -- SmartShell --
@@ -70,7 +71,11 @@ export class Smartshell {
     if (streamingArg) {
       done.resolve({
         childProcess: execChildProcess,
-        finalPromise: childProcessEnded.promise
+        finalPromise: childProcessEnded.promise,
+        kill: () => {
+          // this notation with the - kills the whole process group
+          process.kill(-execChildProcess.pid);
+        }
       });
     }
 
