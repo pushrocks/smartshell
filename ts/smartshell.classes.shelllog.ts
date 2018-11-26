@@ -19,7 +19,7 @@ export class ShellLog {
       }
       return dataArg;
     })();
-    console.log(dataString);
+    process.stdout.write(dataString);
   }
 
   /**
