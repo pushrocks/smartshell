@@ -1,4 +1,4 @@
-export type TExecutor = "sh" | "bash";
+export type TExecutor = 'sh' | 'bash';
 
 export interface IShellEnvContructorOptions {
   executor: TExecutor;
@@ -19,9 +19,7 @@ export class ShellEnv {
 
     // add sourcefiles
     if (optionsArg.sourceFilePaths) {
-      this.sourceFileArray = this.sourceFileArray.concat(
-        optionsArg.sourceFilePaths
-      );
+      this.sourceFileArray = this.sourceFileArray.concat(optionsArg.sourceFilePaths);
     }
 
     // add pathDirectories
@@ -39,9 +37,7 @@ export class ShellEnv {
     if (process.env.SMARTSHELL_PATH) {
       commandPath = `${commandPath}:${process.env.SMARTSHELL_PATH}`;
     }
-    commandResult = `PATH=${
-      commandPath
-    } && ${commandStringArg}`;
+    commandResult = `PATH=${commandPath} && ${commandStringArg}`;
     return commandResult;
   }
 
@@ -63,9 +59,9 @@ export class ShellEnv {
   }
 
   createEnvExecString(commandArg): string {
-    let commandResult = ''
-    if (this.executor === "bash") {
-      let sourceString = "";
+    let commandResult = '';
+    if (this.executor === 'bash') {
+      let sourceString = '';
       for (let sourceFilePath of this.sourceFileArray) {
         sourceString = sourceString + `source ${sourceFilePath} && `;
       }

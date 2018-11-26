@@ -30,7 +30,7 @@ export class Smartshell {
 
   constructor(optionsArg: IShellEnvContructorOptions) {
     this.shellEnv = new ShellEnv(optionsArg);
-  };
+  }
 
   /**
    * executes a given command async
