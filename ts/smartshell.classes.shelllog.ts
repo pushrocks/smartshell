@@ -13,13 +13,7 @@ export class ShellLog {
    */
   logToConsole(dataArg: string | Buffer): void {
     // make sure we have the data as string
-    const dataString: string = (() => {
-      if (Buffer.isBuffer(dataArg)) {
-        return dataArg.toString();
-      }
-      return dataArg;
-    })();
-    process.stdout.write(dataString);
+    process.stdout.write(dataArg);
   }
 
   /**

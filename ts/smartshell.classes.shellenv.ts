@@ -33,11 +33,26 @@ export class ShellEnv {
    */
   private _setPath(commandStringArg): string {
     let commandResult = commandStringArg;
-    let commandPath = process.env.PATH;
+    let commandPaths: string[] = [];
+    commandPaths = commandPaths.concat(process.env.PATH.split(':'));
     if (process.env.SMARTSHELL_PATH) {
-      commandPath = `${commandPath}:${process.env.SMARTSHELL_PATH}`;
+      commandPaths = commandPaths.concat(process.env.SMARTSHELL_PATH.split(':'));
     }
-    commandResult = `PATH=${commandPath} && ${commandStringArg}`;
+
+    // lets filter for unwanted paths
+    // Windows WSL
+    commandPaths = commandPaths.filter(commandPathArg => {
+      const filterResult =
+        !commandPathArg.startsWith('/mnt/c/') &&
+        !commandPathArg.startsWith('Files/1E') &&
+        !commandPathArg.includes(' ');
+      if (!filterResult) {
+        // console.log(`${commandPathArg} will be filtered!`);
+      }
+      return filterResult;
+    });
+
+    commandResult = `PATH=${commandPaths.join(':')} && ${commandStringArg}`;
     return commandResult;
   }
 
@@ -60,12 +75,21 @@ export class ShellEnv {
 
   createEnvExecString(commandArg): string {
     let commandResult = '';
-    if (this.executor === 'bash') {
-      let sourceString = '';
-      for (let sourceFilePath of this.sourceFileArray) {
-        sourceString = sourceString + `source ${sourceFilePath} && `;
-      }
-      commandResult = `bash -c '${sourceString} ${commandArg}'`;
+    let sourceString = '';
+
+    switch (this.executor) {
+      case 'bash':
+        for (let sourceFilePath of this.sourceFileArray) {
+          sourceString = sourceString + `source ${sourceFilePath} && `;
+        }
+        commandResult = `bash -c '${sourceString}${commandArg}'`;
+        break;
+      case 'sh':
+        for (let sourceFilePath of this.sourceFileArray) {
+          sourceString = sourceString + `source ${sourceFilePath} && `;
+        }
+        commandResult = `${sourceString}${commandArg}`;
+        break;
     }
     commandResult = this._setPath(commandResult);
     return commandResult;
