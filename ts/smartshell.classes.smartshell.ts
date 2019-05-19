@@ -26,7 +26,8 @@ export interface IExecResultStreaming {
 
 // -- SmartShell --
 export class Smartshell {
-  shellEnv: ShellEnv;
+  public shellEnv: ShellEnv;
+  public smartexit = new plugins.smartexit.SmartExit();
 
   constructor(optionsArg: IShellEnvContructorOptions) {
     this.shellEnv = new ShellEnv(optionsArg);
@@ -55,6 +56,8 @@ export class Smartshell {
       detached: true
     });
 
+    this.smartexit.addProcess(execChildProcess);
+
     execChildProcess.stdout.on('data', data => {
       if (!silentArg) {
         spawnlogInstance.logToConsole(data);
@@ -80,6 +83,7 @@ export class Smartshell {
     }
 
     execChildProcess.on('exit', (code, signal) => {
+      this.smartexit.removeProcess(execChildProcess);
       if (strictArg && code === 1) {
         done.reject();
       }

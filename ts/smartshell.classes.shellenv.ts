@@ -73,22 +73,28 @@ export class ShellEnv {
     this.sourceFileArray = [];
   }
 
-  createEnvExecString(commandArg): string {
+  public createEnvExecString(commandArg: string): string {
     let commandResult = '';
     let sourceString = '';
 
+    // deal with sourcestring
+    for (const sourceFilePath of this.sourceFileArray) {
+      sourceString = sourceString + `source ${sourceFilePath} && `;
+    }
+
+    // deal with avaiable path
+    let pathString = 'PATH=$PATH';
+    for (const pathDir of this.pathDirArray) {
+      pathString += `:${pathDir}`;
+    }
+    pathString += ` && `;
+
     switch (this.executor) {
       case 'bash':
-        for (let sourceFilePath of this.sourceFileArray) {
-          sourceString = sourceString + `source ${sourceFilePath} && `;
-        }
-        commandResult = `bash -c '${sourceString}${commandArg}'`;
+        commandResult = `bash -c '${pathString}${sourceString}${commandArg}'`;
         break;
       case 'sh':
-        for (let sourceFilePath of this.sourceFileArray) {
-          sourceString = sourceString + `source ${sourceFilePath} && `;
-        }
-        commandResult = `${sourceString}${commandArg}`;
+        commandResult = `${pathString}${sourceString}${commandArg}`;
         break;
     }
     commandResult = this._setPath(commandResult);
