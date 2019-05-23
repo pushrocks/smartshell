@@ -3,5 +3,15 @@
     "npmGlobalTools": [],
     "npmAccessLevel": "public",
     "npmRegistryUrl": "registry.npmjs.org"
+  },
+  "gitzone": {
+    "module": {
+      "githost": "gitlab.com",
+      "gitscope": "pushrocks",
+      "gitrepo": "smartshell",
+      "shortDescription": "shell actions designed as promises",
+      "npmPackagename": "@pushrocks/smartshell",
+      "license": "MIT"
+    }
   }
 }
