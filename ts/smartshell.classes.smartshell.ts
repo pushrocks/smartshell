@@ -53,7 +53,7 @@ export class Smartshell {
     const execChildProcess = cp.spawn(commandToExecute, [], {
       shell: true,
       env: process.env,
-      detached: true
+      detached: false
     });
 
     this.smartexit.addProcess(execChildProcess);
