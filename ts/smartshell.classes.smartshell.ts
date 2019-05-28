@@ -166,17 +166,31 @@ export class Smartshell {
    * @param regexArg
    */
   public async execInteractive(commandStringArg: string) {
+    if (process.env.CI) {
+      return;
+    }
     const done = plugins.smartpromise.defer();
     const shell = cp.spawn('sh', [], { stdio: 'pipe' });
     this.smartexit.addProcess(shell);
     const shellLog = new ShellLog();
-    process.stdin.pipe(shell.stdin);
-    shell.stdout.pipe(process.stdout);
+    const stdInStream = process.stdin.pipe(shell.stdin);
+    const stdOutStream = shell.stdout.pipe(process.stdout);
     shell.on('close', code => {
       console.log(`interactive shell terminated with code ${code}`);
+      stdInStream.removeAllListeners();
+      stdInStream.uncork();
+      stdOutStream.removeAllListeners();
+      stdOutStream.unpipe();
+      shell.kill('SIGTERM');
       done.resolve();
     });
-    shell.stdin.write(commandStringArg + '\n');
+    let commandString = commandStringArg;
+    if (process.env.CI) {
+      commandString += ' && exit';
+    }
+    commandString += '\n';
+
+    shell.stdin.write(commandString);
     await done.promise;
   }
 }
