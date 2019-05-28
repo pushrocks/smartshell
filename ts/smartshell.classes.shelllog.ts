@@ -5,13 +5,13 @@ import * as plugins from './smartshell.plugins';
  * making sure the process doesn't run out of memory
  */
 export class ShellLog {
-  logStore = Buffer.from('');
+  public logStore = Buffer.from('');
 
   /**
    * log data to console
    * @param dataArg
    */
-  logToConsole(dataArg: string | Buffer): void {
+  public writeToConsole(dataArg: string | Buffer): void {
     // make sure we have the data as string
     process.stdout.write(dataArg);
   }
@@ -20,7 +20,7 @@ export class ShellLog {
    * add data to Buffer for later consumption
    * @param dataArg
    */
-  addToBuffer(dataArg: string | Buffer): void {
+  public addToBuffer(dataArg: string | Buffer): void {
     // make sure we have the data as Buffer
     const dataBuffer: Buffer = (() => {
       if (!Buffer.isBuffer(dataArg)) {
@@ -31,8 +31,8 @@ export class ShellLog {
     this.logStore = Buffer.concat([this.logStore, dataBuffer]);
   }
 
-  logAndAdd(dataArg: string | Buffer): void {
-    this.logToConsole(dataArg);
+  public logAndAdd(dataArg: string | Buffer): void {
+    this.writeToConsole(dataArg);
     this.addToBuffer(dataArg);
   }
 }

@@ -45,7 +45,11 @@ tap.test('smartshell should run async', async () => {
 });
 
 tap.test('should be able to find git', async () => {
-  testSmartshell.exec('git --version');
+  await testSmartshell.exec('git --version');
+});
+
+tap.test('should spawn an interactive cli', async () => {
+  await testSmartshell.execInteractive('echo "hi"');
 });
 
 tap.start({

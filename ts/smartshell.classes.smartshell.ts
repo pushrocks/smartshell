@@ -60,13 +60,13 @@ export class Smartshell {
 
     execChildProcess.stdout.on('data', data => {
       if (!silentArg) {
-        spawnlogInstance.logToConsole(data);
+        spawnlogInstance.writeToConsole(data);
       }
       spawnlogInstance.addToBuffer(data);
     });
     execChildProcess.stderr.on('data', data => {
       if (!silentArg) {
-        spawnlogInstance.logToConsole(data);
+        spawnlogInstance.writeToConsole(data);
       }
       spawnlogInstance.addToBuffer(data);
     });
@@ -103,7 +103,7 @@ export class Smartshell {
     return result;
   }
 
-  async exec(commandStringArg: string): Promise<IExecResult> {
+  public async exec(commandStringArg: string): Promise<IExecResult> {
     return (await this._exec(commandStringArg, false)) as IExecResult;
   }
 
@@ -111,28 +111,28 @@ export class Smartshell {
    * executes a given command async and silent
    * @param commandStringArg
    */
-  async execSilent(commandStringArg: string): Promise<IExecResult> {
+  public async execSilent(commandStringArg: string): Promise<IExecResult> {
     return (await this._exec(commandStringArg, true)) as IExecResult;
   }
 
   /**
    * executes a command async and strict, meaning it rejects the promise if something happens
    */
-  async execStrict(commandStringArg: string): Promise<IExecResult> {
+  public async execStrict(commandStringArg: string): Promise<IExecResult> {
     return (await this._exec(commandStringArg, true, true)) as IExecResult;
   }
 
   /**
    * executes a command and allows you to stream output
    */
-  async execStreaming(
+  public async execStreaming(
     commandStringArg: string,
     silentArg: boolean = false
   ): Promise<IExecResultStreaming> {
     return (await this._exec(commandStringArg, silentArg, false, true)) as IExecResultStreaming;
   }
 
-  async execStreamingSilent(commandStringArg: string) {
+  public async execStreamingSilent(commandStringArg: string) {
     return (await this.execStreaming(commandStringArg, true)) as IExecResultStreaming;
   }
 
@@ -141,7 +141,11 @@ export class Smartshell {
    * @param commandStringArg
    * @param regexArg
    */
-  async execAndWaitForLine(commandStringArg: string, regexArg: RegExp, silentArg: boolean = false) {
+  public async execAndWaitForLine(
+    commandStringArg: string,
+    regexArg: RegExp,
+    silentArg: boolean = false
+  ) {
     let done = plugins.smartpromise.defer();
     let execStreamingResult = await this.execStreaming(commandStringArg, silentArg);
     execStreamingResult.childProcess.stdout.on('data', (stdOutChunk: string) => {
@@ -152,7 +156,27 @@ export class Smartshell {
     return done.promise;
   }
 
-  async execAndWaitForLineSilent(commandStringArg: string, regexArg: RegExp) {
+  public async execAndWaitForLineSilent(commandStringArg: string, regexArg: RegExp) {
     this.execAndWaitForLine(commandStringArg, regexArg, true);
+  }
+
+  /**
+   * execs an command and then enters interactive CLI
+   * @param commandStringArg
+   * @param regexArg
+   */
+  public async execInteractive(commandStringArg: string) {
+    const done = plugins.smartpromise.defer();
+    const shell = cp.spawn('sh', [], { stdio: 'pipe' });
+    this.smartexit.addProcess(shell);
+    const shellLog = new ShellLog();
+    process.stdin.pipe(shell.stdin);
+    shell.stdout.pipe(process.stdout);
+    shell.on('close', code => {
+      console.log(`interactive shell terminated with code ${code}`);
+      done.resolve();
+    });
+    shell.stdin.write(commandStringArg + '\n');
+    await done.promise;
   }
 }
