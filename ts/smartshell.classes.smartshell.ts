@@ -119,6 +119,10 @@ export class Smartshell {
    * executes a command async and strict, meaning it rejects the promise if something happens
    */
   public async execStrict(commandStringArg: string): Promise<IExecResult> {
+    return (await this._exec(commandStringArg, false, true)) as IExecResult;
+  }
+
+  public async execStrictSilent (commandStringArg: string): Promise<IExecResult> {
     return (await this._exec(commandStringArg, true, true)) as IExecResult;
   }
 
@@ -182,6 +186,7 @@ export class Smartshell {
       stdOutStream.removeAllListeners();
       stdOutStream.unpipe();
       shell.kill('SIGTERM');
+      process.stdin.pause();
       done.resolve();
     });
     let commandString = commandStringArg;
