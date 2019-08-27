@@ -122,7 +122,7 @@ export class Smartshell {
     return (await this._exec(commandStringArg, false, true)) as IExecResult;
   }
 
-  public async execStrictSilent (commandStringArg: string): Promise<IExecResult> {
+  public async execStrictSilent(commandStringArg: string): Promise<IExecResult> {
     return (await this._exec(commandStringArg, true, true)) as IExecResult;
   }
 
