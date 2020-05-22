@@ -53,18 +53,18 @@ export class Smartshell {
     const execChildProcess = cp.spawn(commandToExecute, [], {
       shell: true,
       env: process.env,
-      detached: false
+      detached: false,
     });
 
     this.smartexit.addProcess(execChildProcess);
 
-    execChildProcess.stdout.on('data', data => {
+    execChildProcess.stdout.on('data', (data) => {
       if (!silentArg) {
         spawnlogInstance.writeToConsole(data);
       }
       spawnlogInstance.addToBuffer(data);
     });
-    execChildProcess.stderr.on('data', data => {
+    execChildProcess.stderr.on('data', (data) => {
       if (!silentArg) {
         spawnlogInstance.writeToConsole(data);
       }
@@ -77,8 +77,9 @@ export class Smartshell {
         finalPromise: childProcessEnded.promise,
         kill: () => {
           // this notation with the - kills the whole process group
-          process.kill(-execChildProcess.pid);
-        }
+          console.log(`running tree kill on process ${execChildProcess.pid}`);
+          plugins.treeKill(execChildProcess.pid);
+        },
       });
     }
 
@@ -90,7 +91,7 @@ export class Smartshell {
 
       const execResult = {
         exitCode: code,
-        stdout: spawnlogInstance.logStore.toString()
+        stdout: spawnlogInstance.logStore.toString(),
       };
 
       if (!streamingArg) {
@@ -179,7 +180,7 @@ export class Smartshell {
     const shellLog = new ShellLog();
     const stdInStream = process.stdin.pipe(shell.stdin);
     const stdOutStream = shell.stdout.pipe(process.stdout);
-    shell.on('close', code => {
+    shell.on('close', (code) => {
       console.log(`interactive shell terminated with code ${code}`);
       stdInStream.removeAllListeners();
       stdInStream.uncork();

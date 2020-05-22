@@ -4,3 +4,8 @@ import * as smartpromise from '@pushrocks/smartpromise';
 import * as which from 'which';
 
 export { smartdelay, smartexit, smartpromise, which };
+
+// third party
+import treeKill from 'tree-kill';
+
+export { treeKill };
